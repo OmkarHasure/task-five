@@ -1,0 +1,30 @@
+name: Auto Merge Dev Branches
+
+on:
+  push:
+    branches:
+      - dev-om1
+      - dev-om2
+
+permissions:
+  contents: write
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Merge changes into development
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+          git checkout development
+          git merge origin/${{ github.ref_name }}
+
+          git push origin development
